@@ -59,10 +59,32 @@ asm (									\
     POINTER_EXPR" "__STRING(section)"_test	\n"			\
     ".text					\n")
 
-#define	INIT_ARRAY_TEST(section)						\
+#define	INIT_ARRAY_TEST(section)					\
 extern void (*__ ## section ## _start[])(int, char **, char **);	\
 extern void (*__ ## section ## _end[])(int, char **, char **);		\
 INIT_TEST(section)
+
+#define	FINI_TEST(section)						\
+static void section ## _test(void) __used;				\
+int section ## _pre;							\
+int section ## _post;							\
+static void								\
+section ## _test(void)							\
+{									\
+	printf("In ."__STRING(section)"\n");				\
+	printf("pre test has %srun\n", section ## _pre ? "" : "not ");	\
+	printf("post test has %srun\n", section ## _post ? "" : "not "); \
+	printf("\n");							\
+}									\
+asm (									\
+    ".section ."__STRING(section)",\"aw\"	\n"			\
+    POINTER_EXPR" "__STRING(section)"_test	\n"			\
+    ".text					\n")
+
+#define	FINI_ARRAY_TEST(section)					\
+extern void (*__ ## section ## _start[])(int, char **, char **);	\
+extern void (*__ ## section ## _end[])(int, char **, char **);		\
+FINI_TEST(section)
 
 #define	PRINT_INIT_RESULT(section)					\
 do {									\
@@ -71,23 +93,35 @@ do {									\
 	printf("\n");							\
 } while (0)
 
-#define	PRINT_INIT_ARRAY_RESULT(section)					\
+#define	PRINT_INITFINI_ARRAY_RESULT(section)				\
 do {									\
 	printf("__"__STRING(section)"_start = %p\n",			\
 	    __ ## section ##_start);					\
 	printf("__"__STRING(section)"_end = %p\n", __ ## section ## _end); \
 	printf("."__STRING(section)" size = %ld\n",			\
 	    (long)(__ ## section ## _end - __ ## section ## _start));	\
+} while (0)
+
+#define	PRINT_INIT_ARRAY_RESULT(section)				\
+do {									\
+	PRINT_INITFINI_ARRAY_RESULT(section);				\
 	PRINT_INIT_RESULT(section);					\
 } while (0)
 
+#define	PRINT_FINI_ARRAY_RESULT(section)				\
+	PRINT_INITFINI_ARRAY_RESULT(section)
+
 INIT_ARRAY_TEST(preinit_array);
 INIT_ARRAY_TEST(init_array);
+FINI_ARRAY_TEST(fini_array);
 INIT_TEST(ctors);
+FINI_TEST(dtors);
 
 #if defined(INIT_CALL_SEQ)
 static void init_test(void) __used;
+static void fini_test(void) __used;
 int init_run;
+
 static void
 init_test(void)
 {
@@ -97,6 +131,17 @@ init_test(void)
 asm (
     ".section .init		\n"
     INIT_CALL_SEQ(init_test)"	\n"
+    ".text			\n");
+
+static void
+fini_test(void)
+{
+
+	printf("In .fini\n");
+}
+asm (
+    ".section .fini		\n"
+    INIT_CALL_SEQ(fini_test)"	\n"
     ".text			\n");
 #endif
 
@@ -159,5 +204,10 @@ main(int argc, char *argv[])
 	printf("\n");
 
 	printf("jcr %srun\n", jcr_run ? "" : "not ");
+	printf("\n");
+
+	PRINT_FINI_ARRAY_RESULT(fini_array);
+	printf("\n");
+
 	return (0);
 }

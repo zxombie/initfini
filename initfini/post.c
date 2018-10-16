@@ -33,7 +33,7 @@
 #include <sys/cdefs.h>
 #include "initfini.h"
 
-#define	INIT_POST_TEST(section)						\
+#define	INITFINI_POST_TEST(section)						\
 static void section ## _post_test(void) __used;				\
 extern int section ## _post;						\
 static void								\
@@ -46,6 +46,8 @@ asm (									\
     POINTER_EXPR" "__STRING(section)"_post_test	\n"			\
     ".text					\n")
 
-INIT_POST_TEST(preinit_array);
-INIT_POST_TEST(init_array);
-INIT_POST_TEST(ctors);
+INITFINI_POST_TEST(preinit_array);
+INITFINI_POST_TEST(init_array);
+INITFINI_POST_TEST(fini_array);
+INITFINI_POST_TEST(ctors);
+INITFINI_POST_TEST(dtors);

@@ -33,7 +33,7 @@
 #include <sys/cdefs.h>
 #include "initfini.h"
 
-#define	INIT_PRE_TEST(section)						\
+#define	INITFINI_PRE_TEST(section)					\
 static void section ## _pre_test(void) __used;				\
 extern int section ## _pre;						\
 static void								\
@@ -46,6 +46,8 @@ asm (									\
     POINTER_EXPR" "__STRING(section)"_pre_test	\n"			\
     ".text					\n")
 
-INIT_PRE_TEST(preinit_array);
-INIT_PRE_TEST(init_array);
-INIT_PRE_TEST(ctors);
+INITFINI_PRE_TEST(preinit_array);
+INITFINI_PRE_TEST(init_array);
+INITFINI_PRE_TEST(fini_array);
+INITFINI_PRE_TEST(ctors);
+INITFINI_PRE_TEST(dtors);
