@@ -67,10 +67,12 @@ INIT_TEST(section)
 #define	FINI_TEST(section)						\
 static void section ## _test(void) __used;				\
 int section ## _pre;							\
+int section ## _run;							\
 int section ## _post;							\
 static void								\
 section ## _test(void)							\
 {									\
+	section ## _run = 1;						\
 	printf("In ."__STRING(section)"\n");				\
 	printf("pre test has %srun\n", section ## _pre ? "" : "not ");	\
 	printf("post test has %srun\n", section ## _post ? "" : "not "); \
@@ -167,6 +169,19 @@ do {									\
 	RECORD_STATE(preinit_array, 0);
 	RECORD_STATE(init_array, 4);
 	RECORD_STATE(ctors, 8);
+}
+
+static void destructor_test(void) __used;
+
+__attribute__((destructor)) static void
+destructor_test(void)
+{
+
+	constructor_state = 0;
+	RECORD_STATE(fini_array, 0);
+	RECORD_STATE(dtors, 0);
+	printf("destructor state: %x\n", constructor_state);
+	printf("\n");
 }
 
 typedef void (*func)(void);
