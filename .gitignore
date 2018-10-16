@@ -1,0 +1,7 @@
+*.o
+.depend
+.depend.*
+initfini/initfini
+initfini_static/initfini
+*.debug
+*.full
