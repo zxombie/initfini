@@ -34,6 +34,14 @@
 #include <stdio.h>
 #include "initfini.h"
 
+#if defined(__aarch64__)
+#define	INIT_CALL_SEQ(func)	"bl " __STRING(func)
+#elif defined(__amd64__)
+#define	INIT_CALL_SEQ(func)	"call " __STRING(func)
+#else
+#warning No .init call sequence
+#endif
+
 #define	INIT_TEST(section)						\
 static void section ## _test(void) __used;				\
 int section ## _pre;							\
@@ -75,6 +83,21 @@ INIT_ARRAY_TEST(preinit_array);
 INIT_ARRAY_TEST(init_array);
 INIT_TEST(ctors);
 
+#if defined(INIT_CALL_SEQ)
+static void init_test(void) __used;
+int init_run;
+static void
+init_test(void)
+{
+
+	init_run = 1;
+}
+asm (
+    ".section .init		\n"
+    INIT_CALL_SEQ(init_test)"	\n"
+    ".text			\n");
+#endif
+
 static void constructor_test(void) __used;
 int constructor_run, constructor_state;
 
@@ -106,6 +129,13 @@ main(int argc, char *argv[])
 	PRINT_INIT_ARRAY_RESULT(preinit_array);
 	PRINT_INIT_ARRAY_RESULT(init_array);
 	PRINT_INIT_RESULT(ctors);
+
+#if defined(INIT_CALL_SEQ)
+	printf(".init %srun\n", init_run ? "" : "not ");
+#else
+	printf("No INIT_CALL_SEQ defined\n");
+#endif
+	printf("\n");
 
 	printf("constructor %srun\n", constructor_run ? "" : "not ");
 	printf("constructor state: %x\n", constructor_state);
