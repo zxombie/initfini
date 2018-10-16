@@ -38,6 +38,8 @@
 #define	INIT_CALL_SEQ(func)	"bl " __STRING(func)
 #elif defined(__amd64__)
 #define	INIT_CALL_SEQ(func)	"call " __STRING(func)
+#elif defined(__powerpc64__)
+#define	INIT_CALL_SEQ(func)	"bl " __STRING(func) "; nop"
 #else
 #warning No .init call sequence
 #endif
