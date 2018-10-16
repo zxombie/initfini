@@ -76,8 +76,8 @@ do {									\
 	printf("__"__STRING(section)"_start = %p\n",			\
 	    __ ## section ##_start);					\
 	printf("__"__STRING(section)"_end = %p\n", __ ## section ## _end); \
-	printf("."__STRING(section)" size = %lx\n",			\
-	    __ ## section ## _end - __ ## section ## _start);		\
+	printf("."__STRING(section)" size = %ld\n",			\
+	    (long)(__ ## section ## _end - __ ## section ## _start));	\
 	PRINT_INIT_RESULT(section);					\
 } while (0)
 
