@@ -42,7 +42,7 @@ section ## _post_test(void)						\
 	section ## _post = 1;						\
 }									\
 asm (									\
-    ".section ."__STRING(section)"		\n"			\
+    ".section ."__STRING(section)",\"aw\"	\n"			\
     POINTER_EXPR" "__STRING(section)"_post_test	\n"			\
     ".text					\n")
 

@@ -45,7 +45,7 @@ section ## _test(void)							\
 	section ## _run = 1;						\
 }									\
 asm (									\
-    ".section ."__STRING(section)"		\n"			\
+    ".section ."__STRING(section)",\"aw\"	\n"			\
     POINTER_EXPR" "__STRING(section)"_test	\n"			\
     ".text					\n")
 
