@@ -122,6 +122,21 @@ do {									\
 	RECORD_STATE(ctors, 8);
 }
 
+typedef void (*func)(void);
+void _Jv_RegisterClasses(const func *);
+
+int jcr_run;
+void
+_Jv_RegisterClasses(const func *jcr)
+{
+
+	jcr_run = 1;
+}
+asm (
+    ".section .jcr,\"aw\"			\n"
+    POINTER_EXPR" 1				\n"
+    ".text					\n");
+
 int
 main(int argc, char *argv[])
 {
@@ -139,5 +154,8 @@ main(int argc, char *argv[])
 
 	printf("constructor %srun\n", constructor_run ? "" : "not ");
 	printf("constructor state: %x\n", constructor_state);
+	printf("\n");
+
+	printf("jcr %srun\n", jcr_run ? "" : "not ");
 	return (0);
 }
