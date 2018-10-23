@@ -38,6 +38,15 @@
 #define	INIT_CALL_SEQ(func)	"bl " __STRING(func)
 #elif defined(__amd64__) || defined(__i386__)
 #define	INIT_CALL_SEQ(func)	"call " __STRING(func)
+#elif defined(__mips__)
+#define	INIT_CALL_SEQ(func)						\
+    ".set noreorder		\n"					\
+    "bal	1f		\n"					\
+    "nop			\n"					\
+    ".set reorder		\n"					\
+    "1f:			\n"					\
+    ".cpsetup $ra, $v0, 1b	\n"					\
+    "jal	" __STRING(func)
 #elif defined(__powerpc64__)
 #define	INIT_CALL_SEQ(func)	"bl " __STRING(func) "; nop"
 #else
