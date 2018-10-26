@@ -2,6 +2,7 @@
 SHLIB=initfini
 SHLIB_MAJOR=0
 CFLAGS+=	-DSHLIB
+#CFLAGS+=	-DNO_INIT_ARRAY
 
 FILES=initfini
 CLEANFILES=initfini

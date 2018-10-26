@@ -124,9 +124,11 @@ do {									\
 #define	PRINT_FINI_ARRAY_RESULT(section)				\
 	PRINT_INITFINI_ARRAY_RESULT(section)
 
+#ifndef NO_INIT_ARRAY
 INIT_ARRAY_TEST(preinit_array);
 INIT_ARRAY_TEST(init_array);
 FINI_ARRAY_TEST(fini_array);
+#endif
 INIT_TEST(ctors);
 FINI_TEST(dtors);
 
@@ -177,8 +179,10 @@ do {									\
 		constructor_state |= (4 << shift);			\
 } while (0)
 
+#ifndef NO_INIT_ARRAY
 	RECORD_STATE(preinit_array, 0);
 	RECORD_STATE(init_array, 4);
+#endif
 	RECORD_STATE(ctors, 8);
 }
 
@@ -189,7 +193,9 @@ destructor_test(void)
 {
 
 	constructor_state = 0;
+#ifndef NO_INIT_ARRAY
 	RECORD_STATE(fini_array, 0);
+#endif
 	RECORD_STATE(dtors, 0);
 	printf("destructor state: %x\n", constructor_state);
 	printf("\n");
@@ -225,8 +231,10 @@ print_results(void)
 
 	__cxa_atexit(cxa_atexit, NULL, __dso_handle);
 
+#ifndef NO_INIT_ARRAY
 	PRINT_INIT_ARRAY_RESULT(preinit_array);
 	PRINT_INIT_ARRAY_RESULT(init_array);
+#endif
 	PRINT_INIT_RESULT(ctors);
 
 #if defined(INIT_CALL_SEQ)
@@ -243,8 +251,10 @@ print_results(void)
 	printf("jcr %srun\n", jcr_run ? "" : "not ");
 	printf("\n");
 
+#ifndef NO_INIT_ARRAY
 	PRINT_FINI_ARRAY_RESULT(fini_array);
 	printf("\n");
+#endif
 
 	printf("__dso_handle = %p\n", __dso_handle);
 	printf("\n");

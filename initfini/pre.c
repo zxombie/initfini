@@ -46,8 +46,10 @@ asm (									\
     POINTER_EXPR" "__STRING(section)"_pre_test	\n"			\
     ".text					\n")
 
+#ifndef NO_INIT_ARRAY
 INITFINI_PRE_TEST(preinit_array);
 INITFINI_PRE_TEST(init_array);
 INITFINI_PRE_TEST(fini_array);
+#endif
 INITFINI_PRE_TEST(ctors);
 INITFINI_PRE_TEST(dtors);

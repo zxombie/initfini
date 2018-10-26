@@ -46,8 +46,10 @@ asm (									\
     POINTER_EXPR" "__STRING(section)"_post_test	\n"			\
     ".text					\n")
 
+#ifndef NO_INIT_ARRAY
 INITFINI_POST_TEST(preinit_array);
 INITFINI_POST_TEST(init_array);
 INITFINI_POST_TEST(fini_array);
+#endif
 INITFINI_POST_TEST(ctors);
 INITFINI_POST_TEST(dtors);
