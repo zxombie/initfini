@@ -223,6 +223,7 @@ cxa_atexit(void *ptr)
 {
 
 	printf("cxa_atexit: %p\n", ptr);
+	printf("\n");
 }
 
 void
