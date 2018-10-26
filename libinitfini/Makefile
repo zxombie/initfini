@@ -10,7 +10,7 @@ CLEANFILES=initfini
 initfini: initfini.sh
 	cp ${.CURDIR}/initfini.sh ${.OBJDIR}/initfini
 
-SUBDIR=		test
+SUBDIR=		test test_dlopen
 
 .include "../initfini/Makefile.srcs"
 .include <bsd.lib.mk>
