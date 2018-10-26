@@ -1,3 +1,3 @@
-SUBDIR=initfini initfini_static
+SUBDIR=initfini initfini_static libinitfini
 
 .include <bsd.subdir.mk>

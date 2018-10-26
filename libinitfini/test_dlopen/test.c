@@ -30,10 +30,27 @@
  * SUCH DAMAGE.
  */
 
-#ifdef __LP64__
-#define	POINTER_EXPR	".quad"
-#else
-#define	POINTER_EXPR	".long"
-#endif
+#include <assert.h>
+#include <dlfcn.h>
+#include <stdlib.h>
 
-void print_results(void);
+#include <initfini.h>
+
+int
+main(int argc, char *argv[])
+{
+	void *handle;
+	void (*func)(void);
+
+	handle = dlopen("../libinitfini.so", RTLD_LAZY);
+	assert(handle != NULL);
+
+	func = dlsym(handle, "print_results");
+	assert(func != NULL);
+
+	(*func)();
+
+	dlclose(handle);
+
+	return (0);
+}

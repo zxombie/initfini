@@ -30,10 +30,12 @@
  * SUCH DAMAGE.
  */
 
-#ifdef __LP64__
-#define	POINTER_EXPR	".quad"
-#else
-#define	POINTER_EXPR	".long"
-#endif
+#include <initfini.h>
 
-void print_results(void);
+int
+main(int argc, char *argv[])
+{
+
+	print_results();
+	return (0);
+}

@@ -210,9 +210,20 @@ asm (
     POINTER_EXPR" 1				\n"
     ".text					\n");
 
-int
-main(int argc, char *argv[])
+int __cxa_atexit(void (*)(void *), void *, void *);
+
+static void
+cxa_atexit(void *ptr)
 {
+
+	printf("cxa_atexit: %p\n", ptr);
+}
+
+void
+print_results(void)
+{
+
+	__cxa_atexit(cxa_atexit, NULL, __dso_handle);
 
 	PRINT_INIT_ARRAY_RESULT(preinit_array);
 	PRINT_INIT_ARRAY_RESULT(init_array);
@@ -237,6 +248,14 @@ main(int argc, char *argv[])
 
 	printf("__dso_handle = %p\n", __dso_handle);
 	printf("\n");
+}
 
+#ifndef SHLIB
+int
+main(int argc, char *argv[])
+{
+
+	print_results();
 	return (0);
 }
+#endif
