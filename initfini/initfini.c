@@ -34,6 +34,8 @@
 #include <stdio.h>
 #include "initfini.h"
 
+extern void *__dso_handle;
+
 #if defined(__aarch64__) || defined(__arm__)
 #define	INIT_CALL_SEQ(func)	"bl " __STRING(func)
 #elif defined(__amd64__) || defined(__i386__)
@@ -231,6 +233,9 @@ main(int argc, char *argv[])
 	printf("\n");
 
 	PRINT_FINI_ARRAY_RESULT(fini_array);
+	printf("\n");
+
+	printf("__dso_handle = %p\n", __dso_handle);
 	printf("\n");
 
 	return (0);
